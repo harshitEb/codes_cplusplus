@@ -143,7 +143,7 @@ int lenList(struct Node *head){
     return len;
 }
 
-Struct Node* rotateKright(struct Node * A,int k){ 
+struct Node* rotateKright(struct Node * A,int k){ 
 	int len = lenList(A);
     if(len == 1 || B%len == 0)return A;
     B = B%len;
