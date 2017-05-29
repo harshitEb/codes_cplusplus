@@ -132,6 +132,38 @@ void reverse(struct Node ** root){
 	*root = c;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//#########################################  Kth rotation  #########################################################
+int lenList(struct Node *head){
+    int len=0;
+    while(head){
+        len++;
+        head = head->next;
+    }
+    return len;
+}
+
+Struct Node* rotateKright(struct Node * A,int k){ 
+	int len = lenList(A);
+    if(len == 1 || B%len == 0)return A;
+    B = B%len;
+    struct Node *newTail = A,*head = A,*newHead = A;
+    struct Node *t = A;
+    int x = len-B;
+    while(x > 1){
+        t = t->next;
+        x--;
+    }
+    newHead = t->next;
+    while(newTail->next)newTail = newTail->next;
+    newTail->next = head;
+    t->next = NULL;
+    
+    
+    return newHead;
+}
+
+
 ////##########################################################################################/////////////////
 //										MERGESORT ON LIST 
 ////##########################################################################################/////////////////
@@ -180,6 +212,50 @@ void mergeSort(struct Node ** root){
 	*root = sortedMerge(firstHalf,secondHalf);
 
 }
+
+// ////##########################################################################################/////////////////
+// //										QuickSort ON LIST 
+// ////##########################################################################################/////////////////
+// struct Node * getTail(struct Node * head){
+// 	while(head->next)head=head->next;
+// 	return head;
+// }
+
+// void deleteNode(struct Node ** root,struct Node ** del){
+// 	struct Node * tmp = *root;
+// 	while(tmp->next != NULL)tmp = tmp->next;
+// 	if(!tmp){
+// 		struct Node *x = tmp->next;
+// 		tmp->next = tmp->next->next;
+// 		free(x);
+// 	}
+// }
+
+// struct Node* q_partition(struct Node *head,struct Node * tail){
+// 	struct Node * pivot = tail;
+// 	struct Node * iter = head;
+// 	while(!iter->next->next){
+// 		if(iter->data > pivot->data){
+// 			struct Node * temp = iter;
+// 			head = insertAtEnd(head,iter->data);
+// 			deleteNode(&head,&iter);
+// 		}
+// 	}
+// 	return pivot->next;
+// }
+
+// void quickSort(struct Node ** head,struct Node ** tail){
+// 	while(head != tail){
+
+// 		struct Node * part = q_partition(*head,*tail);
+// 		quickSort(head,&part);
+// 		quickSort(&(part->next),tail);
+// 	}
+// }
+
+
+
+
 //######################################################################################################
 
 
@@ -214,7 +290,9 @@ int main(){
 	//skipMdeleteN(root,2,2);
 	//mergeSort(&root);
 
-	reverse(&root);
+	//reverse(&root);
+	//struct Node * tail = getTail(root);
+	//quickSort(&root,&tail);
 	printList(root);
 
 	return 0;
