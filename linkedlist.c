@@ -143,7 +143,7 @@ int lenList(struct Node *head){
     return len;
 }
 
-struct Node* rotateKright(struct Node * A,int k){ 
+struct Node* rotateKright(struct Node * A,int B){ 
 	int len = lenList(A);
     if(len == 1 || B%len == 0)return A;
     B = B%len;
@@ -257,6 +257,72 @@ void mergeSort(struct Node ** root){
 
 
 //######################################################################################################
+				//		remove duplicates on unsorted list
+
+
+//O(n^2) time O(1) space;  
+void removeDup1(struct Node ** root){
+	struct Node *head = *root;
+	while(head->next){
+		struct Node *ptr = head->next,*prev = head;
+		while(ptr){
+			if(ptr->data == head->data){
+				struct Node *t = ptr;
+				prev->next = ptr->next;
+				//prev = prev->next;
+				ptr = prev->next;
+				free(t);
+			}
+			else{
+				ptr = ptr->next;
+				prev = prev->next;
+			}
+		}
+		head = head->next;
+	}
+}
+
+// O(n)time  O(n)space
+void removeDup2(struct Node ** root){
+	struct Node *head = *root;
+	struct Node *prev = NULL;
+	int n = lenList(head);
+	//int occurance[];memset(occurance,0,sizeof(occurance));
+	set <int> occurance;
+	while(head){
+		if(!occurance.insert(head->data).second){
+			struct Node *t = head;
+			prev->next = head->next;
+			head = prev->next;
+			free(t);
+		}
+		else{
+			prev = head;
+			head = head->next;
+		}	
+	}
+}
+
+
+//######################################################################################################
+//							Kth from last Node
+//######################################################################################################
+int kfromLast(struct Node *head,int k){
+	struct Node *header=head,*trailer=NULL;
+	while(k > 1){
+		header = header->next;
+		k--;
+	}
+	trailer = head;
+	//cout << header->next->data << " " << trailer->data << endl;
+	while(header->next){
+		trailer = trailer->next;
+		header = header->next;
+	}
+
+	return trailer->data;
+}
+
 
 
 int main(){
@@ -268,7 +334,7 @@ int main(){
 
 	//printList(root);
 	
-	insertAtK(&root,2,12);
+	insertAtK(&root,2,3);
 	insertAtK(&root,4,14);
 
 	//printList(root);
@@ -284,7 +350,7 @@ int main(){
 	//printList(root);
 	root = sortedInsert(root,8);
 	//printList(root);
-	root = sortedInsert(root,0);
+	root = sortedInsert(root,9);
 	printList(root);
 
 	//skipMdeleteN(root,2,2);
@@ -293,7 +359,11 @@ int main(){
 	//reverse(&root);
 	//struct Node * tail = getTail(root);
 	//quickSort(&root,&tail);
-	printList(root);
+	//removeDup2(&root);
+
+	//printList(root);
+
+	cout << kfromLast(root,4) << endl;
 
 	return 0;
 }
