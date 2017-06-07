@@ -74,17 +74,26 @@ struct Node * insertAtEnd(struct Node *root,int data){
 //sorted order insertion
 //return new root;
 struct Node * sortedInsert(struct Node * root,int data){
-	struct Node * head;
-	head = root;
-	struct Node * tmp = (struct Node *)malloc(sizeof(struct Node));
+	struct Node *head = root;
+	struct Node *tmp = (struct Node *)malloc(sizeof(struct Node));
 	tmp->data = data;
 	tmp->next = NULL;
-	if(!head){return tmp;}
-	if(head->data > data){tmp->next = head;return tmp;}
-	while(head->next && head->next->data < data)head = head->next;
-	tmp->next = head->next;
-	head->next = tmp;
-	return root;
+	if(!head)return tmp;
+	if(data<=head->data){tmp->next = head;return tmp;}
+	
+	//recursive
+	// else{
+	// 	head->next = sortedInsert(head->next,data);
+	// 	return head;
+	// }
+
+	//iterative
+	else{
+		while(head->next && head->next->data < data)head = head->next;
+		tmp->next = head->next;
+		head->next = tmp;
+		return root;
+	}		
 }
 
 //##############################################################################################################
@@ -324,32 +333,96 @@ int kfromLast(struct Node *head,int k){
 }
 
 
+//######################################################################################################
+//							Partition at value K
+//######################################################################################################
+void insertfront(struct Node ** root,struct Node * x){
+	struct Node *head = *root;
+	*root = x;
+	x->next = head;
+	return;
+}
+
+void partition(struct Node ** root,int k){
+	if(!(*root))return;
+	struct Node * head = *root;
+	head = head->next;
+	if(!head)return;
+	struct Node * prev = *root;
+	while(head){
+		if(head->data < k){
+			struct Node *tmp = (struct Node *)malloc(sizeof(struct Node));
+			tmp->data = head->data;
+			tmp->next = NULL;
+			insertfront(root,tmp);
+			struct Node *t = head;
+			prev->next = head->next;
+			free(t);
+			head = prev->next;
+		}
+		else{
+			prev = head;
+			head = head->next;
+		}
+
+		printList(*root);
+	}
+}
+//####################################################################################################
+//					SUM  OF TWO NUMBERS AS LIST
+//####################################################################################################
+struct Node * sumList(struct Node *a,struct Node *b){
+	struct Node *result = (struct Node *)malloc(sizeof(struct Node));
+	result->data = -1;
+	result->next = NULL;
+	struct Node *answer = result;
+	int carry=0;
+	int sum = 0;
+	while(a || b || carry){
+		sum = (a?a->data:0) + (b?b->data:0) + carry;
+		struct Node *tmp = (struct Node *)malloc(sizeof(struct Node));
+		tmp->data = sum%10;
+		carry = sum/10;
+
+		result->next = tmp;
+		result = result->next;
+		// if(!result){result = tmp;answer = result;}
+		// else result->next = tmp;
+
+		// result = tmp;
+		
+		if(a)a = a->next;
+		if(b)b = b->next;
+	}
+
+	return answer->next;
+}
 
 int main(){
 	struct Node * root = NULL;
-	insertAtHead(&root,9);
-	insertAtHead(&root,4);
-	insertAtHead(&root,3);
-	insertAtHead(&root,2);
+	// insertAtHead(&root,9);
+	// insertAtHead(&root,4);
+	// insertAtHead(&root,3);
+	// insertAtHead(&root,2);
 
-	//printList(root);
+	// //printList(root);
 	
-	insertAtK(&root,2,3);
-	insertAtK(&root,4,14);
+	// insertAtK(&root,2,3);
+	// insertAtK(&root,4,14);
 
-	//printList(root);
+	// //printList(root);
 
-	root = insertAtEnd(root,31);
-	root = insertAtEnd(root,32);
+	// root = insertAtEnd(root,31);
+	// root = insertAtEnd(root,32);
 
 	root = sortedInsert(root,7);
-	//printList(root);
+	printList(root);
 	root = sortedInsert(root,3);
-	//printList(root);
+	printList(root);
 	root = sortedInsert(root,1);
-	//printList(root);
+	printList(root);
 	root = sortedInsert(root,8);
-	//printList(root);
+	printList(root);
 	root = sortedInsert(root,9);
 	printList(root);
 
@@ -363,7 +436,29 @@ int main(){
 
 	//printList(root);
 
-	cout << kfromLast(root,4) << endl;
+	//cout << kfromLast(root,4) << endl;
 
+	//partition(&root,9);
+	//printList(root);
+	
+
+	///sum list
+	// struct Node *A = NULL;
+	// insertAtHead(&A,9);
+	// insertAtHead(&A,8);
+	// insertAtHead(&A,7);
+	// insertAtHead(&A,6);
+	// printList(A);
+
+	// struct Node *B = NULL;
+	// insertAtHead(&B,4);
+	// insertAtHead(&B,3);
+	// insertAtHead(&B,2);
+	// insertAtHead(&B,1);
+	// printList(B);
+
+	// struct Node *sum = sumList(A,B);
+	// printList(sum);
+	//sum list
 	return 0;
 }
